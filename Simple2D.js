@@ -46,3 +46,46 @@ function zeichneFeld()
   }
 } 
 
+function moveUp() 
+{
+ if (figurY>0 && feld[figurY-1][figurX]==0)
+ {
+   feld[figurY][figurX] = 0;
+   figurY--;
+   feld[figurY][figurX] = 2;
+   zeichneFeld();
+ }
+}
+
+function moveRight() 
+{
+ if (figurX<feld[figurY].length && feld[figurY][figurX+1]==0)
+ {
+   feld[figurY][figurX] = 0;
+   figurX++;
+   feld[figurY][figurX] = 2;
+   zeichneFeld();
+ }
+}
+
+function moveDown() 
+{
+ if (figurY<feld.length && feld[figurY+1][figurX]==0)
+ {
+   feld[figurY][figurX] = 0;
+   figurY++;
+   feld[figurY][figurX] = 2;
+   zeichneFeld();
+ }
+}
+
+function moveLeft() 
+{
+ if (figurX>0 && feld[figurY][figurX-1]==0)
+ {
+   feld[figurY][figurX] = 0;
+   figurX--;
+   feld[figurY][figurX] = 2;
+   zeichneFeld();
+ }
+}
