@@ -1,12 +1,17 @@
-var feld = [[1,0,0,1],
-			[1,0,0,0],
-			[0,0,1,0],
-			[0,1,0,0]];
+var feld = [[1,0,1,1],
+			[0,0,0,1],
+			[0,0,0,0],
+			[0,0,1,0]];
+var figurX = 1;
+var figurY = 2;
+feld[figurY][figurX] = 2;
 
 var kachel = new Image();
 var stein = new Image();
+var figur = new Image();
 kachel.src = "green.gif";
 stein.src = "blue.gif";
+figur.src = "red.gif";
 var offsetX = 0;
 var offsetY = 0;
 var canvas, context;
@@ -33,6 +38,10 @@ function zeichneFeld()
 	if (feld[i][j]==1) //Hindernis
 	{
 	  context.drawImage(stein,x,y,stein.width,stein.height);
+	}
+	if (feld[i][j]==2) //Spielfigur
+	{
+	  context.drawImage(figur,x,y,figur.width,figur.height);
 	}
   }
 } 
