@@ -9,14 +9,10 @@
 
 <body onload="init();zeichneFeld();">
 
-<canvas id="spielfeld" width="600" height="400">
+<canvas id="spielfeld" width="600" height="400" tabindex="1">
+	<!-- tabindex macht den canvas fokussierbar -->
 	Looks like canvas is not supported in your browser!
 </canvas>
-<br>
-<input type="button" value="up" onclick="moveUp()">
-<input type="button" value="down" onclick="moveDown()">
-<input type="button" value="right" onclick="moveRight()">
-<input type="button" value="left" onclick="moveLeft()">
 
 </body>
 

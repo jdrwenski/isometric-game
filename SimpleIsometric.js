@@ -23,6 +23,8 @@ var canvas, context;
 function init() {
   canvas = document.getElementById("spielfeld");
   context = canvas.getContext("2d");
+  canvas.addEventListener("keydown", handleKeydown);
+  canvas.focus() // siehe tabindex im html-body
 }
 
 /* 	Diese Funktion zum Zeichnen des Spielfelds muss immer wieder neu
@@ -102,3 +104,32 @@ function moveLeft()
    zeichneFeld();
  }
 }
+
+// Tastatursteuerung beim Herunterdrücken:
+function handleKeydown(event) {
+  let key = event.key || event.keyCode;
+  let hasHandled = true;
+  switch (key) {
+	case "s": case "ArrowDown": 
+		moveDown();
+		break;
+	case "w": case "ArrowUp":
+		moveUp();
+		break;
+    case "a": case "ArrowLeft":  
+		moveLeft();
+		break;
+    case "d": case "ArrowRight":
+		moveRight();
+		break;
+    case "Enter":
+		// "enter" bzw. "return"
+		break;
+    case "Escape":
+		// "esc"
+		break;
+    default: //jede andere Taste
+		hasHandled = false;
+  }
+  if (hasHandled) event.preventDefault();
+};
