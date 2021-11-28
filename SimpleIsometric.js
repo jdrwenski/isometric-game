@@ -8,6 +8,9 @@ var figurX = 1;
 var figurY = 2;
 feld[figurY][figurX] = 2;
 
+/* Zählvariable für die Game Loop */
+var counterGameLoop = 0;
+
 /* Laden der Bilddateien */
 var kachel = new Image();
 var stein = new Image();
@@ -59,7 +62,16 @@ function zeichneFeld()
 	  context.drawImage(figur,isoX,isoY,figur.width,figur.height);
 	}
   }
-} 
+  /* Simple Game Loop */
+  update();
+  setTimeout(zeichneFeld,10);
+}
+
+function update() {
+	counterGameLoop++;
+	/* Hindernis nach 10s verschwinden lassen! */
+	if (counterGameLoop == 1000) feld[3][2] = 0;
+}
 
 function moveUp() 
 {
@@ -68,7 +80,6 @@ function moveUp()
    feld[figurY][figurX] = 0;
    figurY--;
    feld[figurY][figurX] = 2;
-   zeichneFeld();
  }
 }
 
@@ -79,7 +90,6 @@ function moveRight()
    feld[figurY][figurX] = 0;
    figurX++;
    feld[figurY][figurX] = 2;
-   zeichneFeld();
  }
 }
 
@@ -90,7 +100,6 @@ function moveDown()
    feld[figurY][figurX] = 0;
    figurY++;
    feld[figurY][figurX] = 2;
-   zeichneFeld();
  }
 }
 
@@ -101,7 +110,6 @@ function moveLeft()
    feld[figurY][figurX] = 0;
    figurX--;
    feld[figurY][figurX] = 2;
-   zeichneFeld();
  }
 }
 
