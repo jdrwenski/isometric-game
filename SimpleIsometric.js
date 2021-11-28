@@ -1,12 +1,27 @@
 /* 	Folgende Matrix stellt das Spielfeld mit allen Inhalten dar.
 	Die Spielfigur wird anschließend separat gesetzt!	*/
-var feld = [[1,0,1,1],
+var feld = [[1,-3,1,1],
 			[0,0,0,1],
 			[0,0,0,0],
-			[0,0,1,0]];
-var figurX = 1;
-var figurY = 2;
-feld[figurY][figurX] = 2;
+			[0,0,1,-3]];
+
+/* Objekt Literal */
+var player = {
+	x: 1,
+	y: 2,
+	score: 0,
+	setFigur: function() {
+		feld[this.y][this.x] = 2;
+	},
+	liftFigur: function() {
+		feld[this.y][this.x] = 0;
+	},
+	digGold: function() {
+		if ( feld[this.y][this.x] == -3 ) {
+			this.score++;
+		}
+	}
+}
 
 /* Zählvariable für die Game Loop */
 var counterGameLoop = 0;
@@ -14,20 +29,24 @@ var counterGameLoop = 0;
 /* Laden der Bilddateien */
 var kachel = new Image();
 var stein = new Image();
+var gold = new Image();
 var figur = new Image();
 kachel.src = "kachel.gif";
 stein.src = "stein.gif";
+gold.src = "gold.png";
 figur.src = "figur.gif";
 var offsetX = 200;
 var offsetY = 100;
 var canvas, context;
 
 
-function init() {
+function init() 
+{
   canvas = document.getElementById("spielfeld");
   context = canvas.getContext("2d");
   canvas.addEventListener("keydown", handleKeydown);
-  canvas.focus() // siehe tabindex im html-body
+  canvas.focus(); // siehe tabindex im html-body
+  player.setFigur(); // Spielerfigur auf Startposition setzen 
 }
 
 /* 	Diese Funktion zum Zeichnen des Spielfelds muss immer wieder neu
@@ -51,6 +70,10 @@ function zeichneFeld()
 	{
 	  context.drawImage(kachel,isoX,isoY,kachel.width,kachel.height);
 	}
+	if (feld[i][j]==-3)	//goldene Kachel
+	{
+	  context.drawImage(gold,isoX,isoY,gold.width,gold.height);
+	}
 	if (feld[i][j]==1) //Hindernis
 	{
 	  isoY -= stein.height-kachel.height;
@@ -62,73 +85,64 @@ function zeichneFeld()
 	  context.drawImage(figur,isoX,isoY,figur.width,figur.height);
 	}
   }
+  /* Score anzeigen */
+  context.font = '20px Verdana';
+  context.fillStyle = 'blue';
+  context.fillText('Score: ' + player.score,10,20);
   /* Simple Game Loop */
   update();
   setTimeout(zeichneFeld,10);
 }
 
-function update() {
-	counterGameLoop++;
-	/* Hindernis nach 10s verschwinden lassen! */
-	if (counterGameLoop == 1000) feld[3][2] = 0;
+function update() 
+{
+  counterGameLoop++;
+  /* Hindernis nach 10s verschwinden lassen! */
+  if (counterGameLoop == 1000) feld[3][2] = 0;
 }
 
-function moveUp() 
+/* vereinfacht die if-Anweisung in den move()-Funktionen */
+function freiesFeld(x,y) 
 {
- if (figurY>0 && feld[figurY-1][figurX]==0)
- {
-   feld[figurY][figurX] = 0;
-   figurY--;
-   feld[figurY][figurX] = 2;
- }
+  if ( y>=0 && y<feld.length && x>=0 && x<feld[y].length ) 
+  {
+	return ( feld[y][x] <= 0 ); 
+  } 
+  else 
+  {
+	return false;
+  }
 }
 
-function moveRight() 
+function movePlayer(dx,dy)
 {
- if (figurX<feld[figurY].length && feld[figurY][figurX+1]==0)
- {
-   feld[figurY][figurX] = 0;
-   figurX++;
-   feld[figurY][figurX] = 2;
- }
-}
-
-function moveDown() 
-{
- if (figurY<feld.length && feld[figurY+1][figurX]==0)
- {
-   feld[figurY][figurX] = 0;
-   figurY++;
-   feld[figurY][figurX] = 2;
- }
-}
-
-function moveLeft() 
-{
- if (figurX>0 && feld[figurY][figurX-1]==0)
- {
-   feld[figurY][figurX] = 0;
-   figurX--;
-   feld[figurY][figurX] = 2;
- }
+  if ( freiesFeld(player.x+dx,player.y+dy) ) 
+  {
+	player.liftFigur();
+	player.x += dx;
+	player.y += dy;
+	player.digGold();
+	player.setFigur();
+  }
 }
 
 // Tastatursteuerung beim Herunterdrücken:
-function handleKeydown(event) {
+function handleKeydown(event) 
+{
   let key = event.key || event.keyCode;
   let hasHandled = true;
   switch (key) {
 	case "s": case "ArrowDown": 
-		moveDown();
+		movePlayer(0,1);
 		break;
 	case "w": case "ArrowUp":
-		moveUp();
+		movePlayer(0,-1);
 		break;
     case "a": case "ArrowLeft":  
-		moveLeft();
+		movePlayer(-1,0);
 		break;
     case "d": case "ArrowRight":
-		moveRight();
+		movePlayer(1,0);
 		break;
     case "Enter":
 		// "enter" bzw. "return"
